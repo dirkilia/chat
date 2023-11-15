@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+  </head>
+  <body>
+    <label for="name">Enter name</label>
+    <input id="name" type="text" />
+    <label for="name">Enter message</label>
+    <input id="input" type="text" />
+    <button onclick="send()">Send</button>
+    <pre id="output"></pre>
+    <script>
+      let input = document.getElementById("input");
+      let output = document.getElementById("output");
+      let name = document.getElementById("name");
+      var socket = new WebSocket("ws://localhost:8080/ws");
+
+      socket.onopen = function () {
+        output.innerHTML += `Status: Connected\n`;
+      };
+
+      socket.onmessage = function (e) {
+        output.innerHTML += `${e.data}\n`;
+      };
+
+      function send() {
+        if (name.value !== "") {
+          socket.send(`${name.value}: ${input.value}`);
+          input.value = "";
+          name.disabled = true;
+        } else {
+          alert("Enter name")
+        }
+      }
+    </script>
+  </body>
+</html>
